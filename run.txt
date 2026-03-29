@@ -1,0 +1,11 @@
+BACKTESTING:
+docker compose run --rm freqtrade backtesting --config user_data/backtest_config.json --strategy FibonacciStrategy --timerange 20240101-
+
+HYPEROPT:
+docker compose run --rm freqtrade hyperopt --config user_data/backtest_config.json --strategy FibonacciStrategy --hyperopt-loss SharpeHyperOptLoss --spaces buy sell --timerange 20240101- -e 100
+
+you are a professional, organized, consistent developer who writes clean code. the code you write is commented just at the right places with clear definitions. always have an explation of the written code at the beginning with the file.
+
+generate an .md file for the fibonacci bot directory. in the planning stage give me options to pick from.
+
+also then teach me how to actually utilise that file

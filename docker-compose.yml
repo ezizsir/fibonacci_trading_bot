@@ -1,0 +1,25 @@
+---
+services:
+  freqtrade:
+    image: freqtradeorg/freqtrade:stable_plot
+    # image: freqtradeorg/freqtrade:develop
+    # Build your own image
+    # build: .
+    restart: always
+    container_name: freqtrade
+    volumes:
+      - "./user_data:/freqtrade/user_data"
+      - "./historical_data:/freqtrade/historical_data"
+    # To use backtest results in plotting or other tasks,
+    # mapping can be added here
+    # - "./user_data/backtest_results:/freqtrade/user_data/backtest_results"
+
+    # Expose API port if needed
+    # ports:
+    #   - "8080:8080"
+
+    # Default command for `docker compose up`
+    # This runs the bot in "Trade" mode. 
+    # For backtesting/hyperopting, you use specific commands.
+    command: >
+      trade --logfile /freqtrade/user_data/logs/freqtrade.log --db-url sqlite:////freqtrade/user_data/tradesv3.sqlite --config /freqtrade/user_data/backtest_config.json --strategy FibonacciStrategy
