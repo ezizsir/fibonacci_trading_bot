@@ -44,26 +44,22 @@ class FibonacciStrategy(IStrategy):
     fib_leeway = DecimalParameter(0.0, 0.02, default=0.005, space='buy', optimize=True)
 
     # Long Entry Ratios (Toggle on/off)
-    buy_fib_0236 = BooleanParameter(default=True, space='buy', optimize=True)
-    buy_fib_0382 = BooleanParameter(default=True, space='buy', optimize=True)
-    buy_fib_0500 = BooleanParameter(default=True, space='buy', optimize=True)
-    buy_fib_0618 = BooleanParameter(default=True, space='buy', optimize=True)
-    buy_fib_0650 = BooleanParameter(default=True, space='buy', optimize=True)
-    buy_fib_0786 = BooleanParameter(default=True, space='buy', optimize=True)
-    buy_fib_0886 = BooleanParameter(default=True, space='buy', optimize=True)
+    buy_fib_0236 = BooleanParameter(default=True, space='buy', optimize=False)
+    buy_fib_0382 = BooleanParameter(default=True, space='buy', optimize=False)
+    buy_fib_0500 = BooleanParameter(default=True, space='buy', optimize=False)
+    buy_fib_0618 = BooleanParameter(default=True, space='buy', optimize=False)
+    buy_fib_0650 = BooleanParameter(default=True, space='buy', optimize=False)
+    buy_fib_0786 = BooleanParameter(default=True, space='buy', optimize=False)
+    buy_fib_0886 = BooleanParameter(default=True, space='buy', optimize=False)
 
     # Short Entry Ratios (Toggle on/off)
-    short_fib_0236 = BooleanParameter(default=True, space='sell', optimize=True)
-    short_fib_0382 = BooleanParameter(default=True, space='sell', optimize=True)
-    short_fib_0500 = BooleanParameter(default=True, space='sell', optimize=True)
-    short_fib_0618 = BooleanParameter(default=True, space='sell', optimize=True)
-    short_fib_0650 = BooleanParameter(default=True, space='sell', optimize=True)
-    short_fib_0786 = BooleanParameter(default=True, space='sell', optimize=True)
-    short_fib_0886 = BooleanParameter(default=True, space='sell', optimize=True)
-
-    # Exit Ratios (Simplified for now, using a single ratio for exit signal)
-    sell_fib_ratio = CategoricalParameter(['0.236', '0.382', '0.5', '0.618', '0.65', '0.786', '0.886', '1.0'], default='1.0', space='sell', optimize=True)
-    exit_short_fib_ratio = CategoricalParameter(['0.0', '0.236', '0.382', '0.5', '0.618', '0.65', '0.786'], default='0.0', space='buy', optimize=True)
+    short_fib_0236 = BooleanParameter(default=True, space='sell', optimize=False)
+    short_fib_0382 = BooleanParameter(default=True, space='sell', optimize=False)
+    short_fib_0500 = BooleanParameter(default=True, space='sell', optimize=False)
+    short_fib_0618 = BooleanParameter(default=True, space='sell', optimize=False)
+    short_fib_0650 = BooleanParameter(default=True, space='sell', optimize=False)
+    short_fib_0786 = BooleanParameter(default=True, space='sell', optimize=False)
+    short_fib_0886 = BooleanParameter(default=True, space='sell', optimize=False)
 
     # Startup period
     startup_candle_count: int = 0
@@ -134,11 +130,10 @@ class FibonacciStrategy(IStrategy):
         for key, ratio in self.RATIO_MAP.items():
             param_name = f'buy_fib_{key}'
             if getattr(self, param_name).value:
-                # Price within leeway zone of the Fibonacci level
-                # Bounce/Touch: price came from above or is near the level
+                # Price wick must cross the upper leeway bound
                 condition = (
-                    (dataframe['close'] <= dataframe[f'fib_{ratio}'] * (1 + leeway)) &
-                    (dataframe['close'] >= dataframe[f'fib_{ratio}'] * (1 - leeway))
+                    (dataframe['high'] > dataframe[f'fib_{ratio}'] * (1 + leeway)) &
+                    (dataframe['low'] < dataframe[f'fib_{ratio}'] * (1 + leeway))
                 )
                 long_conditions.append(condition)
 
@@ -156,10 +151,10 @@ class FibonacciStrategy(IStrategy):
         for key, ratio in self.RATIO_MAP.items():
             param_name = f'short_fib_{key}'
             if getattr(self, param_name).value:
-                # Price within leeway zone of the Fibonacci level (acting as resistance)
+                # Price wick must cross the lower leeway bound
                 condition = (
-                    (dataframe['close'] >= dataframe[f'fib_{ratio}'] * (1 - leeway)) &
-                    (dataframe['close'] <= dataframe[f'fib_{ratio}'] * (1 + leeway))
+                    (dataframe['low'] < dataframe[f'fib_{ratio}'] * (1 - leeway)) &
+                    (dataframe['high'] > dataframe[f'fib_{ratio}'] * (1 - leeway))
                 )
                 short_conditions.append(condition)
 
@@ -175,28 +170,7 @@ class FibonacciStrategy(IStrategy):
         return dataframe
 
     def populate_exit_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-        # Long Exit (Take Profit/Resistance hit)
-        sell_ratio = self.sell_fib_ratio.value
-        dataframe.loc[
-            (qtpylib.crossed_above(dataframe['close'], dataframe[f'fib_{sell_ratio}'])),
-            'exit_long'] = 1
-
-        # Short Exit (Take Profit/Support hit)
-        exit_short_ratio = self.exit_short_fib_ratio.value
-        dataframe.loc[
-            (qtpylib.crossed_below(dataframe['close'], dataframe[f'fib_{exit_short_ratio}'])),
-            'exit_short'] = 1
-
+        # Exit logic is handled strictly by ROI and Stoploss
         return dataframe
 
-    def custom_stoploss(self, pair: str, trade: Trade, current_time: datetime,
-                        current_rate: float, current_profit: float, **kwargs) -> float:
-        # 10 days rule
-        time_diff = current_time - trade.open_date_utc
-        if time_diff.days >= 10:
-            if current_profit >= 0:
-                # For both long and short, current_profit > 0 means we are in the green.
-                # Locked in break-even (slightly below to avoid immediate exit on spread)
-                return -0.001 
-        
-        return -0.99
+
