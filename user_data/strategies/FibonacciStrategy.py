@@ -44,22 +44,22 @@ class FibonacciStrategy(IStrategy):
     fib_leeway = DecimalParameter(0.0, 0.02, default=0.005, space='buy', optimize=True)
 
     # Long Entry Ratios (Toggle on/off)
-    buy_fib_0236 = BooleanParameter(default=False, space='buy', optimize=True)
-    buy_fib_0382 = BooleanParameter(default=False, space='buy', optimize=True)
-    buy_fib_0500 = BooleanParameter(default=False, space='buy', optimize=True)
+    buy_fib_0236 = BooleanParameter(default=True, space='buy', optimize=True)
+    buy_fib_0382 = BooleanParameter(default=True, space='buy', optimize=True)
+    buy_fib_0500 = BooleanParameter(default=True, space='buy', optimize=True)
     buy_fib_0618 = BooleanParameter(default=True, space='buy', optimize=True)
     buy_fib_0650 = BooleanParameter(default=True, space='buy', optimize=True)
-    buy_fib_0786 = BooleanParameter(default=False, space='buy', optimize=True)
-    buy_fib_0886 = BooleanParameter(default=False, space='buy', optimize=True)
+    buy_fib_0786 = BooleanParameter(default=True, space='buy', optimize=True)
+    buy_fib_0886 = BooleanParameter(default=True, space='buy', optimize=True)
 
     # Short Entry Ratios (Toggle on/off)
-    short_fib_0236 = BooleanParameter(default=False, space='sell', optimize=True)
-    short_fib_0382 = BooleanParameter(default=False, space='sell', optimize=True)
-    short_fib_0500 = BooleanParameter(default=False, space='sell', optimize=True)
+    short_fib_0236 = BooleanParameter(default=True, space='sell', optimize=True)
+    short_fib_0382 = BooleanParameter(default=True, space='sell', optimize=True)
+    short_fib_0500 = BooleanParameter(default=True, space='sell', optimize=True)
     short_fib_0618 = BooleanParameter(default=True, space='sell', optimize=True)
     short_fib_0650 = BooleanParameter(default=True, space='sell', optimize=True)
-    short_fib_0786 = BooleanParameter(default=False, space='sell', optimize=True)
-    short_fib_0886 = BooleanParameter(default=False, space='sell', optimize=True)
+    short_fib_0786 = BooleanParameter(default=True, space='sell', optimize=True)
+    short_fib_0886 = BooleanParameter(default=True, space='sell', optimize=True)
 
     # Exit Ratios (Simplified for now, using a single ratio for exit signal)
     sell_fib_ratio = CategoricalParameter(['0.236', '0.382', '0.5', '0.618', '0.65', '0.786', '0.886', '1.0'], default='1.0', space='sell', optimize=True)
@@ -119,6 +119,11 @@ class FibonacciStrategy(IStrategy):
         for r in ratios:
             dataframe[f'fib_{r}'] = dataframe['close'].apply(lambda x: self.get_fib_price(pair, x, r))
 
+        # Stochastic Oscillator (26 day period as requested)
+        stoch = ta.STOCH(dataframe, fastk_period=26, slowk_period=3, slowd_period=3)
+        dataframe['stoch_k'] = stoch['slowk']
+        dataframe['stoch_d'] = stoch['slowd']
+
         return dataframe
 
     def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
@@ -141,6 +146,7 @@ class FibonacciStrategy(IStrategy):
             dataframe.loc[
                 (
                     (np.logical_or.reduce(long_conditions)) &
+                    (dataframe['stoch_k'] < 20) &  # Stochastic below 20 for long entries
                     (dataframe['volume'] > 0)
                 ),
                 'enter_long'] = 1
@@ -161,6 +167,7 @@ class FibonacciStrategy(IStrategy):
             dataframe.loc[
                 (
                     (np.logical_or.reduce(short_conditions)) &
+                    (dataframe['stoch_k'] > 80) &  # Stochastic above 80 for short entries
                     (dataframe['volume'] > 0)
                 ),
                 'enter_short'] = 1

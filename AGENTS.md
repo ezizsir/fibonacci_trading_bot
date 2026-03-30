@@ -36,7 +36,7 @@ When asked to optimize or modify the strategy:
 
 ## 4. Execution Commands
 
-These are the exact commands you MUST use when asked to execute a backtest or a hyperopt session. They are predefined in `run.txt`.
+These are the example commands you use when asked to execute a backtest or a hyperopt session. They are predefined in `run.txt`. Configure the timerange  year by year for walk forward analysis.
 
 ### Backtesting
 Run this command from the root directory to backtest the strategy on the historical data (from Jan 1, 2024 onwards):
