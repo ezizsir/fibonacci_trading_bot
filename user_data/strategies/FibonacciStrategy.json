@@ -1,0 +1,44 @@
+{
+  "strategy_name": "FibonacciStrategy",
+  "params": {
+    "max_open_trades": {
+      "max_open_trades": 7
+    },
+    "buy": {
+      "fib_leeway": 0.005,
+      "buy_fib_0236": false,
+      "buy_fib_0382": true,
+      "buy_fib_0500": true,
+      "buy_fib_0618": false,
+      "buy_fib_0650": true,
+      "buy_fib_0786": true,
+      "buy_fib_0886": false
+    },
+    "sell": {
+      "short_fib_0236": false,
+      "short_fib_0382": true,
+      "short_fib_0500": true,
+      "short_fib_0618": true,
+      "short_fib_0650": false,
+      "short_fib_0786": true,
+      "short_fib_0886": false
+    },
+    "roi": {
+      "0": 0.338,
+      "6449": 0.282,
+      "12490": 0.098,
+      "15884": 0
+    },
+    "stoploss": {
+      "stoploss": -0.302
+    },
+    "trailing": {
+      "trailing_stop": true,
+      "trailing_stop_positive": 0.053,
+      "trailing_stop_positive_offset": 0.091,
+      "trailing_only_offset_is_reached": true
+    }
+  },
+  "ft_stratparam_v": 1,
+  "export_time": "2026-03-30 07:51:15.000000+00:00"
+}

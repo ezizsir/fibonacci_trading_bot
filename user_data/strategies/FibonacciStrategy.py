@@ -41,25 +41,25 @@ class FibonacciStrategy(IStrategy):
     # --- Hyperopt parameters ---
 
     # Leeway (Touch Tolerance): 0% to 2%
-    fib_leeway = DecimalParameter(0.0, 0.02, default=0.005, space='buy', optimize=True)
+    fib_leeway = DecimalParameter(0.0, 0.02, default=0.005, space='buy', optimize=False)
 
     # Long Entry Ratios (Toggle on/off)
-    buy_fib_0236 = BooleanParameter(default=True, space='buy', optimize=False)
-    buy_fib_0382 = BooleanParameter(default=True, space='buy', optimize=False)
-    buy_fib_0500 = BooleanParameter(default=True, space='buy', optimize=False)
-    buy_fib_0618 = BooleanParameter(default=True, space='buy', optimize=False)
-    buy_fib_0650 = BooleanParameter(default=True, space='buy', optimize=False)
-    buy_fib_0786 = BooleanParameter(default=True, space='buy', optimize=False)
-    buy_fib_0886 = BooleanParameter(default=True, space='buy', optimize=False)
+    buy_fib_0236 = BooleanParameter(default=True, space='buy', optimize=True)
+    buy_fib_0382 = BooleanParameter(default=True, space='buy', optimize=True)
+    buy_fib_0500 = BooleanParameter(default=True, space='buy', optimize=True)
+    buy_fib_0618 = BooleanParameter(default=True, space='buy', optimize=True)
+    buy_fib_0650 = BooleanParameter(default=True, space='buy', optimize=True)
+    buy_fib_0786 = BooleanParameter(default=True, space='buy', optimize=True)
+    buy_fib_0886 = BooleanParameter(default=True, space='buy', optimize=True)
 
     # Short Entry Ratios (Toggle on/off)
-    short_fib_0236 = BooleanParameter(default=True, space='sell', optimize=False)
-    short_fib_0382 = BooleanParameter(default=True, space='sell', optimize=False)
-    short_fib_0500 = BooleanParameter(default=True, space='sell', optimize=False)
-    short_fib_0618 = BooleanParameter(default=True, space='sell', optimize=False)
-    short_fib_0650 = BooleanParameter(default=True, space='sell', optimize=False)
-    short_fib_0786 = BooleanParameter(default=True, space='sell', optimize=False)
-    short_fib_0886 = BooleanParameter(default=True, space='sell', optimize=False)
+    short_fib_0236 = BooleanParameter(default=True, space='sell', optimize=True)
+    short_fib_0382 = BooleanParameter(default=True, space='sell', optimize=True)
+    short_fib_0500 = BooleanParameter(default=True, space='sell', optimize=True)
+    short_fib_0618 = BooleanParameter(default=True, space='sell', optimize=True)
+    short_fib_0650 = BooleanParameter(default=True, space='sell', optimize=True)
+    short_fib_0786 = BooleanParameter(default=True, space='sell', optimize=True)
+    short_fib_0886 = BooleanParameter(default=True, space='sell', optimize=True)
 
     # Startup period
     startup_candle_count: int = 0

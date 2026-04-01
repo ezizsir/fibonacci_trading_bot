@@ -1,8 +1,17 @@
 BACKTESTING:
 docker compose run --rm freqtrade backtesting --config user_data/backtest_config.json --strategy FibonacciStrategy --timerange 20240101-
+docker compose run --rm freqtrade backtesting-analysis --config user_data/backtest_config.json --strategy FibonacciStrategy --analysis-to-csv
+
+--enable-position-stacking
+
 
 HYPEROPT:
-docker compose run --rm freqtrade hyperopt --config user_data/backtest_config.json --strategy FibonacciStrategy --hyperopt-loss SharpeHyperOptLoss --spaces buy sell --timerange 20240101- -e 100
+docker compose run --rm freqtrade hyperopt --config user_data/backtest_config.json --strategy FibonacciStrategy --hyperopt-loss SharpeHyperOptLoss --spaces buy sell roi stoploss trailing --timerange 20230101-20231231 -e 100
 
 PLOTTING:
 docker compose run --rm freqtrade plot-dataframe --config user_data/backtest_config.json --strategy FibonacciStrategy --timerange 20220101- --indicators1 fib_0.0 fib_0.236 fib_0.382 fib_0.5 fib_0.618 fib_0.65 fib_0.786 fib_0.886 fib_1.0 --indicators2 stoch_k stoch_d
+
+My client is asking for a spreadsheet like (.csv) file for the plot.html files i sent him. The plot files are located at userdata/plot.
+the spreadsheet should have the date, OHLCV, fib levels, stoch rsi, entry signals, entry/exit prices, profit/loss
+
+does a file similar to this already exist? if yes, where? If a file similar to this doesnt exist, how can i make it?

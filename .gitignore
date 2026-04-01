@@ -9,6 +9,9 @@ user_data/hyperopt_results
 user_data/hyperopts
 user_data/notebooks
 
+# Optimizations
+user_data/strategies/*.json
+
 # Keep the strategy files
 !user_data/strategies/FibonacciStrategy.py
 !user_data/strategies/FibonacciStrategy.json
