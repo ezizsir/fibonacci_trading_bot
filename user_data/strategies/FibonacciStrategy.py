@@ -41,7 +41,7 @@ class FibonacciStrategy(IStrategy):
     # --- Hyperopt parameters ---
 
     # Leeway (Touch Tolerance): 0% to 2%
-    fib_leeway = DecimalParameter(0.0, 0.02, default=0.005, space='buy', optimize=False)
+    fib_leeway = DecimalParameter(0.0, 0.02, default=0.0, space='buy', optimize=False)
 
     # Long Entry Ratios (Toggle on/off)
     buy_fib_0236 = BooleanParameter(default=True, space='buy', optimize=True)
@@ -60,6 +60,9 @@ class FibonacciStrategy(IStrategy):
     short_fib_0650 = BooleanParameter(default=True, space='sell', optimize=True)
     short_fib_0786 = BooleanParameter(default=True, space='sell', optimize=True)
     short_fib_0886 = BooleanParameter(default=True, space='sell', optimize=True)
+
+    # Force exit after N days
+    exit_force_days = IntParameter(7, 60, default=30, space='sell', optimize=True)
 
     # Startup period
     startup_candle_count: int = 0
@@ -170,7 +173,15 @@ class FibonacciStrategy(IStrategy):
         return dataframe
 
     def populate_exit_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-        # Exit logic is handled strictly by ROI and Stoploss
+        # Exit logic is handled strictly by ROI, Stoploss and custom_exit
         return dataframe
+
+    def custom_exit(self, pair: str, trade: Trade, current_time: datetime, current_rate: float,
+                    current_profit: float, **kwargs):
+        # Force exit after N days
+        if (current_time - trade.open_date_utc).days >= self.exit_force_days.value:
+            return 'force_exit_30_days'
+        
+        return None
 
 

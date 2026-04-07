@@ -5,35 +5,32 @@
       "max_open_trades": 7
     },
     "buy": {
-      "fib_leeway": 0.005,
-      "buy_fib_0236": false,
+      "fib_leeway": 0.0,
+      "buy_fib_0236": true,
       "buy_fib_0382": true,
       "buy_fib_0500": true,
-      "buy_fib_0618": false,
+      "buy_fib_0618": true,
       "buy_fib_0650": true,
       "buy_fib_0786": true,
-      "buy_fib_0886": false
+      "buy_fib_0886": true
     },
     "sell": {
-      "short_fib_0236": false,
+      "short_fib_0236": true,
       "short_fib_0382": true,
       "short_fib_0500": true,
       "short_fib_0618": true,
-      "short_fib_0650": false,
+      "short_fib_0650": true,
       "short_fib_0786": true,
-      "short_fib_0886": false
+      "short_fib_0886": true
     },
     "roi": {
-      "0": 0.338,
-      "6449": 0.282,
-      "12490": 0.098,
-      "15884": 0
+      "0": 0.23
     },
     "stoploss": {
-      "stoploss": -0.302
+      "stoploss": -0.15
     },
     "trailing": {
-      "trailing_stop": true,
+      "trailing_stop": false,
       "trailing_stop_positive": 0.053,
       "trailing_stop_positive_offset": 0.091,
       "trailing_only_offset_is_reached": true
