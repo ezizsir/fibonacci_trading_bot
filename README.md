@@ -19,13 +19,8 @@ I picked Freqtrade because it gave me a fast backtesting loop, Docker-based repr
 
 We ran dozens of backtests and hyperopt sessions across different timeranges. The best config turned a 47% profit on the 2024 backtest with 493 trades and a 68% win rate — but that same config lost 10% on 2022 data and bled on walk-forward segments. The strategy was curve-fit to a specific period, and the client's performance expectations weren't met across broader market conditions.
 
-The project taught me more about the gap between a good-looking backtest and a robust strategy than any course could have. That lesson — overfitting, walk-forward validation, and honest evaluation — is worth more than the bot's PnL.
+## What I'd continue working on
 
-## What I'd do differently
-
-- **Walk-forward from day one** instead of retroactively. In-sample optimization without out-of-sample validation is how you fool yourself.
-- **Smaller parameter space.** 14 boolean toggles per Fibonacci level gave hyperopt too much freedom to curve-fit.
-- **UseSharpe or Calmar as the objective** from the start rather than chasing raw profit.
 - **Add regime filtering** (trend vs. range) — Fibonacci levels behave differently in trending vs. chopping markets.
 
 ## Tech stack
