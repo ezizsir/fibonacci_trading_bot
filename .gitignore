@@ -1,25 +1,26 @@
-# Freqtrade Data (Very large)
+# Freqtrade Data (very large)
 user_data/data/*
 user_data/backtest_results/*
 user_data/logs/*
 user_data/*.sqlite
+user_data/*.sqlite-shm
+user_data/*.sqlite-wal
 user_data/*.json
 user_data/plot/
 user_data/hyperopt_results
 user_data/hyperopts
 user_data/notebooks
 
-# Optimizations
-user_data/strategies/*.json
-
-# Keep the strategy files
+# Keep the backtest config (secrets scrubbed) and strategy files
+!user_data/backtest_config.json
 !user_data/strategies/FibonacciStrategy.py
 !user_data/strategies/FibonacciStrategy.json
 
-# Keep the config but WARNING: Remove tokens before pushing!
-!user_data/backtest_config.json
+# Optimizations
+user_data/strategies/*.json
+!user_data/strategies/FibonacciStrategy.json
 
-# Python/System
+# Python / System
 __pycache__/
 *.pyc
 .DS_Store
@@ -29,11 +30,13 @@ __pycache__/
 .venv
 venv/
 
-#backtesting data
+# Historical data (regenerable)
 historical_data/*
-
-#keep the files to retrieve atl-ath data
 !historical_data/fib_retracement.py
 !historical_data/get_atl.py
 !historical_data/tickers.txt
- 
+
+# Editor
+.vscode/
+.idea/
+*.swp
